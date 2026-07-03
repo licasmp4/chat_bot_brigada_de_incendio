@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brigada de Incêndio — Assistente</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>🔥 Assistente Brigada de Incêndio</h1>
+    <div class="controls">
+      <select id="provider-select" aria-label="Escolher provedor de IA">
+        {% for id, cfg in providers.items() %}
+        <option value="{{ id }}">{{ cfg.label }}</option>
+        {% endfor %}
+      </select>
+      <button id="new-chat-btn" type="button">Nova conversa</button>
+    </div>
+  </header>
+
+  <main id="chat-window" aria-live="polite"></main>
+
+  <form id="chat-form" autocomplete="off">
+    <input
+      id="chat-input"
+      type="text"
+      placeholder="Pergunte sobre segurança contra incêndio..."
+      aria-label="Mensagem"
+      required
+    />
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
