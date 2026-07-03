@@ -51,11 +51,13 @@ chatForm.addEventListener("submit", async (event) => {
   chatInput.value = "";
   history.push({ role: "user", content: text });
   renderMessage("user", text);
-  saveHistory(history);
 
-  const typingEl = showTypingIndicator();
+  let typingEl;
 
   try {
+    saveHistory(history);
+    typingEl = showTypingIndicator();
+
     const response = await fetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,7 +87,7 @@ chatForm.addEventListener("submit", async (event) => {
     history.push({ role: "assistant", content: botText });
     saveHistory(history);
   } catch (err) {
-    typingEl.remove();
+    if (typingEl) typingEl.remove();
     renderMessage("error", "Erro de conexão. Verifique sua internet e tente novamente.");
   }
 });
