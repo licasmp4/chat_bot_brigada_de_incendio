@@ -4,7 +4,7 @@ load_dotenv()
 
 from flask import Flask, Response, jsonify, render_template, request
 
-from config import PROVIDERS
+from config import PROVIDERS, get_api_key
 from providers import MissingAPIKeyError, stream_reply
 
 app = Flask(
@@ -30,6 +30,15 @@ def chat():
         return jsonify({"error": "provider inválido"}), 400
     if not isinstance(messages, list) or not messages:
         return jsonify({"error": "messages inválido"}), 400
+    if any(m.get("role") not in ("user", "assistant") for m in messages):
+        return jsonify({"error": "role de mensagem inválida"}), 400
+
+    api_key = get_api_key(provider_id)
+    if not api_key:
+        cfg = PROVIDERS[provider_id]
+        return jsonify({
+            "error": f"Chave da API do {cfg['label']} não configurada. Defina {cfg['env']} no arquivo .env."
+        }), 400
 
     def generate():
         try:
