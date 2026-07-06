@@ -251,6 +251,12 @@ async function sendMessage(text) {
 
     history.push({ role: "assistant", content: botText });
     saveHistory(history);
+
+    const avatar = document.querySelector(".chat-avatar");
+    if (avatar) {
+      avatar.classList.add("boing");
+      avatar.addEventListener("animationend", () => avatar.classList.remove("boing"), { once: true });
+    }
   } catch (err) {
     if (typingEl) typingEl.remove();
     renderMessage("error", "Erro de conexão. Verifique sua internet e tente novamente.");

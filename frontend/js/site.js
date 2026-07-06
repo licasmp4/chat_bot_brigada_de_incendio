@@ -23,6 +23,7 @@ const ACHIEVEMENTS = {
   "evacuacao": ["🕺", "Coreógrafo da Fuga", "Acertou a ordem da evacuação sem errar"],
   "certificado": ["🖼️", "Emoldurou", "Gerou o Diploma de Brigadista de Sofá"],
   "dias-zero": ["📉", "Recorde Negativo", "Zerou o placar de dias sem incêndio"],
+  "rebelde": ["😈", "Problema com Autoridade", "Apertou o NÃO APERTE 3 vezes. O botão desistiu."],
 };
 
 function loadAch() {
@@ -76,13 +77,24 @@ const TIPS = [
   "NÃO VOLTE PRA PEGAR O CELULAR. ELE NÃO VOLTARIA POR VOCÊ",
 ];
 
-for (const id of ["marquee-top", "marquee-mid"]) {
+const ZOEIRAS = [
+  "ESTE SITE NUNCA PEGOU FOGO. COINCIDÊNCIA? NÃO. TREINAMENTO",
+  "O BOTÃO NÃO APERTE JÁ FOI APERTADO 6.402 VEZES. DECEPCIONANTE",
+  "NENHUMA SAMAMBAIA FOI QUEIMADA NA PRODUÇÃO DESTE SITE",
+  "SEU EXTINTOR VENCEU E O SITE SABE. O SITE JULGA",
+  "EVACUAR COM ESTILO AINDA É EVACUAR",
+  "O CHEFE HIDRANTE NÃO TIRA FÉRIAS. O FOGO TAMBÉM NÃO",
+];
+
+function fillMarquee(id, list) {
   const track = document.getElementById(id);
-  if (!track) continue;
+  if (!track) return;
   // duplica pro loop infinito do translateX(-50%)
-  const items = [...TIPS, ...TIPS].map((t) => `<span>${t} ✦</span>`).join("");
-  track.innerHTML = items;
+  track.innerHTML = [...list, ...list].map((t) => `<span>${t} ✦</span>`).join("");
 }
+fillMarquee("marquee-top", TIPS);
+fillMarquee("marquee-mid", TIPS);
+fillMarquee("marquee-bottom", ZOEIRAS);
 
 /* ============ 1. apague as chamas do hero ============ */
 
@@ -175,12 +187,23 @@ const siren = (() => {
 const panicDialog = $("#panic-dialog");
 const sirenToggle = $("#siren-toggle");
 
-$("#panic-btn").addEventListener("click", () => {
+const panicBtn = $("#panic-btn");
+const PANIC_TEXTS = ["Não aperte", "Sério, não", "Confia?", "Tá... aperta"];
+let panicHovers = 0;
+let panicPresses = 0;
+
+// o botão negocia com você a cada passada de mouse
+panicBtn.addEventListener("mouseenter", () => {
+  panicBtn.textContent = PANIC_TEXTS[++panicHovers % PANIC_TEXTS.length];
+});
+
+panicBtn.addEventListener("click", () => {
   panicDialog.showModal();
   panicDialog.querySelectorAll(".panic-steps li").forEach((li, i) => {
     li.style.animationDelay = 150 + i * 130 + "ms";
   });
   unlock("panico");
+  if (++panicPresses >= 3) unlock("rebelde");
 });
 
 sirenToggle.addEventListener("click", () => {
@@ -863,6 +886,33 @@ let moodIdx = 0;
 setInterval(() => {
   moodEl.textContent = MOODS[++moodIdx % MOODS.length];
 }, 7000);
+
+/* ============ stickers fofoqueiros ============ */
+
+document.querySelectorAll(".sticker[data-quip]").forEach((s) => {
+  s.addEventListener("click", () => {
+    beep(700, .07);
+    toast(s.textContent, "Ficha técnica", s.dataset.quip);
+  });
+});
+
+/* ============ aba chorona ============ */
+
+const realTitle = document.title;
+document.addEventListener("visibilitychange", () => {
+  document.title = document.hidden ? "🔥 VOLTA! ISSO PODE PEGAR FOGO" : realTitle;
+});
+
+/* ============ recado pros curiosos do F12 ============ */
+
+console.log(
+  "%c🧯 BRIGADA™",
+  "font-size:28px;font-weight:900;color:#ff5c38;text-shadow:2px 2px 0 #212529"
+);
+console.log(
+  "%cInspecionando o código? Ótimo instinto de brigadista.\nDica: digite 193 na página (fora do chat). Feito por Lucas Gonzaga.",
+  "font-size:13px;color:#4a5464"
+);
 
 /* ============ 8. easter egg: digite 193 ============ */
 

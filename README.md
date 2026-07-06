@@ -9,7 +9,8 @@
 ![Flask](https://img.shields.io/badge/Flask-backend-00b2ff?logo=flask&logoColor=212529&labelColor=f4e9e1)
 ![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-zero_deps_no_front-1be349?logo=javascript&logoColor=212529&labelColor=f4e9e1)
 ![IAs](https://img.shields.io/badge/6_provedores-de_IA-ab54f7?labelColor=f4e9e1)
-![Conquistas](https://img.shields.io/badge/14-conquistas-ff5c38?labelColor=f4e9e1)
+![Conquistas](https://img.shields.io/badge/15-conquistas-ff5c38?labelColor=f4e9e1)
+![Autor](https://img.shields.io/badge/feito_por-Lucas_Gonzaga-ea3737?labelColor=f4e9e1)
 
 <img src="docs/img/hero.png" alt="Hero do site: SEU BOMBEIRO DE BOLSO, com chamas clicáveis e stickers" width="820" />
 
@@ -24,9 +25,9 @@
 Um site que ensina **segurança contra incêndio** de dois jeitos ao mesmo tempo:
 
 1. **Conversando** — um chatbot especialista (o *Chefe Hidrante*) que responde sobre prevenção, extintores, rotas de fuga, primeiros socorros e normas (NBR 14276, NBR 12693, NBR 9077...), com streaming em tempo real.
-2. **Brincando** — 14 mecânicas interativas onde errar é engraçado *aqui* pra você não errar *na vida real*.
+2. **Brincando** — 15 mecânicas interativas onde errar é engraçado *aqui* pra você não errar *na vida real*.
 
-Design inspirado no [units.gr](https://units.gr/en/homepage/): fundo creme, cores vivas, tipografia gigante, pills e stickers.
+Design inspirado no [units.gr](https://units.gr/en/homepage/): **soft neubrutalism** — fundo creme, bordas pretas grossas, cores vivas, tipografia display gigante, pills e stickers. Completam a página: números "auditados pela samambaia", depoimentos (mentirosos), FAQ implicante, selo giratório e um botão que negocia com você.
 
 ## 💬 O Chefe Hidrante
 
@@ -41,7 +42,7 @@ Design inspirado no [units.gr](https://units.gr/en/homepage/): fundo creme, core
 - Histórico só no navegador (`localStorage`). Nada vai pro servidor.
 - Status de digitação cômico: *"consultando a NBR 14276..."*, *"procurando o pino do extintor..."*
 
-## 🎮 As 14 mecânicas
+## 🎮 As 15 mecânicas
 
 <div align="center">
 <img src="docs/img/missoes.png" alt="Cards das missões: quiz, extintor, vacilo, fumaça, caça aos perigos, ordem na fuga" width="820" />
@@ -59,10 +60,11 @@ Design inspirado no [units.gr](https://units.gr/en/homepage/): fundo creme, core
 | 🔎 | **Caça aos Perigos** — 5 vacilos escondidos numa sala de 24 itens | Olhar de inspetor |
 | 🕺 | **Ordem na Fuga** — os passos da evacuação embaralhados; clique na sequência certa | A *ordem* importa |
 | 📜 | **Diploma de Brigadista de Sofá** — certificado PNG gerado no canvas, com seu nome e patente | Recompensa (questionável) |
-| 🏅 | **14 conquistas** — toasts + galeria, salvas no navegador | Progresso e rejogabilidade |
+| 🏅 | **15 conquistas** — toasts + galeria, salvas no navegador | Progresso e rejogabilidade |
 | 🏆 | **Placar "dias sem incêndio"** — zera quando você erra o extintor | Vergonha pedagógica |
 | 🔊 | **Sons em WebAudio** — sirene, acertos, erros, fanfarra (sem nenhum asset de áudio; tem botão de mudo) | Feedback |
 | 📟 | **Easter egg** — digite `193` em qualquer lugar da página | O número que importa |
+| 🃏 | **Zoeiras espalhadas** — depoimentos (mentirosos), FAQ implicante, números "auditados pela samambaia", selo girante, stickers fofoqueiros, botão que negocia, aba que chora quando você sai, recado no console | Atenção é retenção |
 
 <div align="center">
 <img src="docs/img/panico.png" alt="Simulado de evacuação após apertar o botão NÃO APERTE" width="720" />
@@ -122,7 +124,7 @@ Aponte o *root directory* do serviço para `backend/`. Com a variável `PORT` de
     ├── css/style.css   # design system (tokens, animações)
     └── js/
         ├── chat.js     # chat, streaming, markdown seguro
-        └── site.js     # as 14 mecânicas
+        └── site.js     # as 15 mecânicas
 ```
 
 ## 🧪 Testes
@@ -139,7 +141,7 @@ node ../frontend/js/test_md.js   # renderizador de Markdown do chat
 
 ## 🎨 Design
 
-Paleta e linguagem visual inspiradas no [units.gr](https://units.gr/en/homepage/):
+Estilo: **soft neubrutalism** (neo-brutalismo suave) — bordas pretas de 2px, cantos bem arredondados, sombras suaves, cores chapadas e tipografia expandida. Paleta e linguagem visual inspiradas no [units.gr](https://units.gr/en/homepage/):
 
 | | Cor | Uso |
 |--|-----|-----|
@@ -165,7 +167,9 @@ Em emergência real, ligue **[193](tel:193)** (Corpo de Bombeiros) — de graça
 
 <br />
 
-Feito com 🧯, dicas de verdade e um humor questionável.
+Feito com 🧯, dicas de verdade e um humor questionável por
+### [Lucas Gonzaga](https://github.com/licasmp4)
+
 *Validade deste README: até o próximo vacilo.*
 
 </div>

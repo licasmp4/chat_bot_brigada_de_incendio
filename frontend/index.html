@@ -26,7 +26,7 @@
       <a href="#" id="nav-quiz">Quiz</a>
     </nav>
     <div class="nav-cta">
-      <button type="button" class="btn-ghost" id="ach-btn" aria-label="Ver conquistas">🏅 <span id="ach-count">0/14</span></button>
+      <button type="button" class="btn-ghost" id="ach-btn" aria-label="Ver conquistas">🏅 <span id="ach-count">0/15</span></button>
       <button type="button" class="btn-ghost" id="sound-btn" aria-label="Ligar ou desligar sons">🔊</button>
       <a class="badge-193" href="tel:193">
         <span class="pulse-dot" aria-hidden="true"></span> 193
@@ -42,11 +42,11 @@
       <div class="hero-score">
         <span class="label-pill">🔥 apagadas: <span id="flame-count">0</span></span>
       </div>
-      <div class="stickers" aria-hidden="true">
-        <span class="sticker _1">🚒</span>
-        <span class="sticker _2">⛑️</span>
-        <span class="sticker _3">🧯</span>
-        <span class="sticker _4">🚨</span>
+      <div class="stickers">
+        <button type="button" class="sticker _1" aria-label="Curiosidade sobre a viatura" data-quip="A viatura. Não é Uber — não leva você pra festa.">🚒</button>
+        <button type="button" class="sticker _2" aria-label="Curiosidade sobre o capacete" data-quip="O capacete. A única moda que salva miolos.">⛑️</button>
+        <button type="button" class="sticker _3" aria-label="Curiosidade sobre o extintor" data-quip="O extintor. Julgando você da parede desde a última inspeção.">🧯</button>
+        <button type="button" class="sticker _4" aria-label="Curiosidade sobre a sirene" data-quip="A sirene. Desafina, mas nunca erra a hora.">🚨</button>
       </div>
       <div class="wrap">
         <span class="label-pill">✦ Assistente de brigada de incêndio ✦</span>
@@ -209,7 +209,7 @@
       <div class="cert-banner">
         <div>
           <h3 class="display">Diploma de <span class="hl-purple">Brigadista de Sofá</span></h3>
-          <p>Junte conquistas (<span id="cert-progress">0/14</span>) e gere um certificado oficialmente não-oficial. Pendure na copa, de preferência longe do fogão.</p>
+          <p>Junte conquistas (<span id="cert-progress">0/15</span>) e gere um certificado oficialmente não-oficial. Pendure na copa, de preferência longe do fogão.</p>
         </div>
         <form id="cert-form">
           <input id="cert-name" type="text" maxlength="40" placeholder="Seu nome (ou codinome heroico)" aria-label="Nome para o certificado" />
@@ -217,6 +217,91 @@
         </form>
       </div>
     </section>
+
+    <!-- números que não mentem (muito) -->
+    <section id="numeros" class="wrap">
+      <div class="section-head">
+        <span class="label-pill">📊 Números que não mentem (muito)</span>
+        <h2 class="display">Auditado pela <span class="hl-green">samambaia</span>.</h2>
+      </div>
+      <div class="stats">
+        <div class="stat-card stat-yellow">
+          <span class="stat-num display">0</span>
+          <p>incêndios causados por este site</p>
+        </div>
+        <div class="stat-card stat-blue">
+          <span class="stat-num display">193</span>
+          <p>único número de telefone que importa</p>
+        </div>
+        <div class="stat-card stat-green">
+          <span class="stat-num display">15</span>
+          <p>jeitos de virar Lorde do Hidrante</p>
+        </div>
+        <div class="stat-card stat-orange">
+          <span class="stat-num display">100%</span>
+          <p>dos elevadores evitados com sucesso</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- depoimentos -->
+    <section id="depoimentos" class="wrap">
+      <div class="section-head">
+        <span class="label-pill">🗣️ Depoimentos reais* <small>(*mentira)</small></span>
+        <h2 class="display">Vidas <span class="hl-orange">transformadas</span>.<br />Elevadores <span class="hl-blue">abandonados</span>.</h2>
+      </div>
+      <div class="testis">
+        <blockquote class="testi-card">
+          <span class="testi-mark hl-yellow" aria-hidden="true">“</span>
+          <p>Nunca mais usei o elevador. Nem quando não tem incêndio. Subo 12 andares na raça. Meu cardiologista mandou um buquê.</p>
+          <footer>— Cláudia, 34, traumatizada positivamente</footer>
+        </blockquote>
+        <blockquote class="testi-card">
+          <span class="testi-mark hl-blue" aria-hidden="true">“</span>
+          <p>O quiz me chamou de Risco Ambulante na frente da minha família. Estudei uma semana. Hoje sou Lorde do Hidrante. Redenção.</p>
+          <footer>— Roberto, ex-Risco Ambulante</footer>
+        </blockquote>
+        <blockquote class="testi-card">
+          <span class="testi-mark hl-orange" aria-hidden="true">“</span>
+          <p>Cinco estrelas. Apertei o botão que dizia NÃO APERTE mais de 40 vezes. A sirene já me reconhece pela digital.</p>
+          <footer>— Anônimo, problema com autoridade</footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="wrap">
+      <div class="section-head">
+        <span class="label-pill">❓ FAQ</span>
+        <h2 class="display">Perguntas <span class="hl-purple">frequentes</span><br />(e uma implicante).</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Posso usar o elevador durante um incêndio?</summary>
+          <p><strong>Não.</strong> Resposta revisada por 100% dos bombeiros consultados. O elevador pode parar no andar do fogo ou travar sem energia. Escada. Sempre.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Água apaga qualquer fogo?</summary>
+          <p><strong>Não.</strong> Óleo de cozinha e equipamentos elétricos discordam veementemente — e respondem com violência. Classe B pede espuma; classe C, CO₂ ou pó. Água em óleo quente vira bola de fogo com plateia.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Pasta de dente resolve queimadura?</summary>
+          <p><strong>Pasta de dente é pra cárie.</strong> Queimadura quer água corrente fria por 10 a 20 minutos. Nada de manteiga, borra de café ou simpatia. A vovó vai entender.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Preciso mesmo ir ao ponto de encontro?</summary>
+          <p><strong>Precisa.</strong> É lá que descobrem que você está vivo. Sumir da contagem significa um bombeiro entrando no prédio em chamas pra te procurar — enquanto você foi comprar pão.</p>
+        </details>
+        <details class="faq-item">
+          <summary>O Chefe Hidrante fala de outros assuntos?</summary>
+          <p><strong>Não.</strong> Já tentaram futebol com ele. Respondeu com a NBR 14276. Ele não é mal-educado — é focado. Tomada sobrecarregada tira o sono dele.</p>
+        </details>
+      </div>
+    </section>
+
+    <div class="marquee marquee-orange" aria-hidden="true">
+      <div class="marquee-track" id="marquee-bottom"></div>
+    </div>
 
     <footer class="footer">
       <div class="wrap">
@@ -228,10 +313,25 @@
         </div>
         <h2 class="display">Não entre em <span class="hl-red">pânico</span>*</h2>
         <p class="footer-note">*a não ser em treino. Aí pode fingir bem feito, que o Chefe Hidrante gosta de realismo.</p>
+        <div class="stamp" aria-hidden="true">
+          <svg viewBox="0 0 120 120" width="120" height="120">
+            <defs>
+              <path id="stamp-circle" d="M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0" />
+            </defs>
+            <text fill="currentColor" font-size="11.5" font-weight="800" letter-spacing="2.5">
+              <textPath href="#stamp-circle">100% LIVRE DE INCÊNDIO • DESDE ONTEM •</textPath>
+            </text>
+            <text x="60" y="72" text-anchor="middle" font-size="34">🧯</text>
+          </svg>
+        </div>
+        <p class="footer-credits">
+          Feito com 🧯, dicas de verdade e um humor questionável por
+          <a href="https://github.com/licasmp4"><strong>Lucas Gonzaga</strong></a>.
+        </p>
         <p class="footer-legal">
           BRIGADA™ é um assistente informativo e não substitui treinamento oficial de brigada.
           Em emergência real, ligue <a href="tel:193">193</a> (Corpo de Bombeiros).<br />
-          Feito com 🧯, dicas de verdade e um humor questionável. Digite <strong>193</strong> em qualquer lugar da página. Confia.
+          Digite <strong>193</strong> em qualquer lugar da página. Confia.
         </p>
       </div>
     </footer>

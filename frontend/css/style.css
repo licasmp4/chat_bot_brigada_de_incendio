@@ -349,12 +349,27 @@ button { font: inherit; color: inherit; cursor: pointer; }
   display: grid;
   place-items: center;
   width: 74px; height: 74px;
+  padding: 0;
   border: 2px solid var(--ink);
   border-radius: 50%;
   background: var(--white);
   font-size: 2rem;
   box-shadow: var(--sh-soft);
   animation: floaty 5s ease-in-out infinite;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: scale .15s var(--spring);
+}
+
+.sticker:hover { scale: 1.15; }
+.sticker:active { scale: .95; }
+
+/* avatar comemora resposta */
+.chat-avatar.boing { animation: boing .5s var(--spring); }
+
+@keyframes boing {
+  30% { scale: 1.25; rotate: -10deg; }
+  60% { scale: .95; rotate: 6deg; }
 }
 
 .sticker._1 { top: 18%; left: 6%; rotate: -8deg; background: var(--purple-soft); }
@@ -1223,6 +1238,153 @@ dialog[open] { animation: dialog-in .3s var(--spring); }
 }
 
 .smoke-hud.ouch { animation: shake .4s; }
+
+/* ---------- números que não mentem ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--s4);
+}
+
+.stat-card {
+  border: 2px solid var(--ink);
+  border-radius: var(--r-lg);
+  padding: var(--s5);
+  text-align: center;
+  box-shadow: var(--sh-soft);
+  transition: transform .2s var(--ease-out);
+}
+
+.stat-card:hover { transform: translateY(-4px) rotate(-1deg); }
+
+.stat-yellow { background: var(--yellow); }
+.stat-blue { background: var(--blue); }
+.stat-green { background: var(--green); }
+.stat-orange { background: var(--orange); }
+
+.stat-num { display: block; font-size: clamp(2.6rem, 6vw, 4.2rem); line-height: 1; }
+
+.stat-card p {
+  margin: var(--s2) 0 0;
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+/* ---------- depoimentos ---------- */
+
+.testis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--s5);
+}
+
+.testi-card {
+  position: relative;
+  margin: 0;
+  padding: var(--s6) var(--s5) var(--s5);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--sh-soft);
+  transition: transform .2s var(--ease-out), rotate .2s var(--ease-out);
+}
+
+.testi-card:nth-child(1) { rotate: -1.2deg; }
+.testi-card:nth-child(2) { rotate: .8deg; }
+.testi-card:nth-child(3) { rotate: -.6deg; }
+.testi-card:hover { transform: translateY(-4px); rotate: 0deg; }
+
+.testi-mark {
+  position: absolute;
+  top: -6px;
+  left: var(--s4);
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.testi-card p { margin: 0 0 var(--s3); font-weight: 600; }
+
+.testi-card footer {
+  font-size: .85rem;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+/* ---------- FAQ ---------- */
+
+.faq-list { display: flex; flex-direction: column; gap: var(--s3); }
+
+.faq-item {
+  border: 2px solid var(--ink);
+  border-radius: var(--r-md);
+  background: var(--white);
+  overflow: hidden;
+  transition: box-shadow .2s var(--ease-out);
+}
+
+.faq-item[open] { box-shadow: var(--sh-soft); }
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s4) var(--s5);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item summary::after {
+  content: "+";
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--yellow);
+  font-size: 1.2rem;
+  transition: rotate .25s var(--spring);
+}
+
+.faq-item[open] summary::after { rotate: 45deg; background: var(--green); }
+
+.faq-item summary:hover { background: var(--cream); }
+
+.faq-item p { margin: 0; padding: 0 var(--s5) var(--s4); }
+
+/* ---------- marquee laranja + selo + créditos ---------- */
+
+.marquee.marquee-orange { background: var(--orange); margin-top: var(--s8); }
+.marquee.marquee-orange span { color: var(--white); }
+
+.footer { margin-top: 0; }
+
+.stamp {
+  display: inline-block;
+  margin: var(--s5) 0 0;
+  color: var(--yellow);
+  animation: stamp-spin 22s linear infinite;
+}
+
+@keyframes stamp-spin { to { rotate: 360deg; } }
+
+.footer-credits {
+  margin: var(--s5) auto 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.footer-credits a { color: var(--yellow); text-decoration-thickness: 2px; }
 
 /* status cômico do "digitando" */
 .typing-status {
