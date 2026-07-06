@@ -3,35 +3,295 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Brigada de Incêndio — Assistente</title>
+  <title>BRIGADA™ — Seu bombeiro de bolso</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,700..900&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body>
-  <header class="app-header">
-    <h1>🔥 Assistente Brigada de Incêndio</h1>
-    <div class="controls">
-      <select id="provider-select" aria-label="Escolher provedor de IA">
-        {% for id, cfg in providers.items() %}
-        <option value="{{ id }}">{{ cfg.label }}</option>
-        {% endfor %}
-      </select>
-      <button id="new-chat-btn" type="button">Nova conversa</button>
+
+  <!-- mecânica 2: marquee de dicas -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee-top"></div>
+  </div>
+
+  <header class="nav">
+    <a class="nav-logo" href="#top">
+      <span class="logo-flame" aria-hidden="true">🔥</span> BRIGADA™
+    </a>
+    <nav class="nav-links" aria-label="Seções">
+      <a href="#chat">Chat</a>
+      <a href="#missoes">Missões</a>
+      <a href="#" id="nav-quiz">Quiz</a>
+    </nav>
+    <div class="nav-cta">
+      <button type="button" class="btn-ghost" id="ach-btn" aria-label="Ver conquistas">🏅 <span id="ach-count">0/14</span></button>
+      <button type="button" class="btn-ghost" id="sound-btn" aria-label="Ligar ou desligar sons">🔊</button>
+      <a class="badge-193" href="tel:193">
+        <span class="pulse-dot" aria-hidden="true"></span> 193
+      </a>
+      <button type="button" class="btn btn-red" id="panic-btn">Não aperte</button>
     </div>
   </header>
 
-  <main id="chat-window" aria-live="polite"></main>
+  <main id="top">
 
-  <form id="chat-form" autocomplete="off">
-    <input
-      id="chat-input"
-      type="text"
-      placeholder="Pergunte sobre segurança contra incêndio..."
-      aria-label="Mensagem"
-      required
-    />
-    <button type="submit">Enviar</button>
-  </form>
+    <!-- mecânica 1: apague as chamas do hero -->
+    <section class="hero" id="hero">
+      <div class="hero-score">
+        <span class="label-pill">🔥 apagadas: <span id="flame-count">0</span></span>
+      </div>
+      <div class="stickers" aria-hidden="true">
+        <span class="sticker _1">🚒</span>
+        <span class="sticker _2">⛑️</span>
+        <span class="sticker _3">🧯</span>
+        <span class="sticker _4">🚨</span>
+      </div>
+      <div class="wrap">
+        <span class="label-pill">✦ Assistente de brigada de incêndio ✦</span>
+        <h1 class="display">
+          Seu <span class="hl-orange">bombeiro</span><br />
+          de <span class="hl-blue">bolso</span>.
+        </h1>
+        <p class="hero-sub">
+          Tire dúvidas sobre prevenção, extintores, rotas de fuga e normas —
+          com um assistente que leva fogo a sério (e quase nada além disso).
+          Ah, e tem chamas soltas nessa página. <strong>Apague elas.</strong>
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-yellow" href="#chat">💬 Perguntar agora</a>
+          <a class="btn" href="#missoes">🎮 Ver missões</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee marquee-blue" aria-hidden="true">
+      <div class="marquee-track" id="marquee-mid"></div>
+    </div>
+
+    <!-- chat -->
+    <section id="chat" class="wrap">
+      <div class="section-head">
+        <span class="label-pill">💬 O titular</span>
+        <h2 class="display">Pergunte ao <span class="hl-blue">Chefe Hidrante</span></h2>
+        <p>Prevenção, procedimentos de emergência, equipamentos e normas (NBR 14276 e amigas). Ele responde tudo — desde que seja sobre incêndio.</p>
+      </div>
+
+      <div class="chat-card">
+        <div class="chat-head">
+          <div class="chat-brand">
+            <span class="chat-avatar" aria-hidden="true">🧯</span>
+            <div>
+              <h3>Chefe Hidrante</h3>
+              <p>online e levemente paranoico com tomadas</p>
+            </div>
+          </div>
+          <div class="chat-controls">
+            <select id="provider-select" aria-label="Escolher provedor de IA">
+              {% for id, cfg in providers.items() %}
+              <option value="{{ id }}" {% if not cfg.configured %}disabled{% endif %}>
+                {{ cfg.label }}{% if not cfg.configured %} — sem chave{% endif %}
+              </option>
+              {% endfor %}
+            </select>
+            <button id="new-chat-btn" type="button" class="btn-ghost">Nova conversa</button>
+          </div>
+        </div>
+
+        <div id="chat-window" aria-live="polite"></div>
+
+        <div class="composer-area">
+          <form id="chat-form" autocomplete="off">
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Pergunte sobre segurança contra incêndio..."
+              aria-label="Mensagem"
+              required
+            />
+            <button type="submit" id="send-btn" aria-label="Enviar">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+                <path d="M3.4 20.4 22 12 3.4 3.6 3.4 10l13 2-13 2z"/>
+              </svg>
+            </button>
+          </form>
+          <p class="disclaimer">
+            Assistente informativo — não substitui treinamento. Em emergência real, ligue
+            <a href="tel:193">193</a> (Corpo de Bombeiros).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- missões: mecânicas 3, 4 e 6 -->
+    <section id="missoes" class="wrap">
+      <div class="section-head">
+        <span class="label-pill">🎮 Missões</span>
+        <h2 class="display">Aprenda <span class="hl-green">brincando</span>.<br />Erre <span class="hl-orange">aqui</span>, não na vida.</h2>
+        <p>Três treinos rápidos. Cada acerto vira conquista — cada erro vira uma lição (e uma piada às suas custas).</p>
+      </div>
+
+      <div class="missions">
+        <!-- mecânica 3: quiz -->
+        <article class="mission-card card-green">
+          <span class="mission-emoji" aria-hidden="true">🎓</span>
+          <h3>Quiz do Brigadista</h3>
+          <p>8 perguntas. No final você ganha uma patente — de "Risco Ambulante" a "Lorde do Hidrante".</p>
+          <div class="mission-body">
+            <p class="scenario">Teoria salva vidas. E rende patentes constrangedoras.</p>
+            <button type="button" class="btn btn-ink" id="quiz-open">Começar o quiz</button>
+          </div>
+        </article>
+
+        <!-- mecânica 4: extintor certo -->
+        <article class="mission-card card-orange">
+          <span class="mission-emoji" aria-hidden="true">🧯</span>
+          <h3>Qual extintor?</h3>
+          <p>Um fogo aparece. Você escolhe o agente. Escolher errado aqui é engraçado — na vida real, nem tanto.</p>
+          <div class="mission-body">
+            <span class="streak-pill">sequência: <span id="ext-streak">0</span> 🔥</span>
+            <p class="scenario" id="ext-scenario"></p>
+            <div class="option-grid" id="ext-options"></div>
+            <p class="feedback" id="ext-feedback"></p>
+          </div>
+        </article>
+
+        <!-- mecânica 6: detector de vacilo -->
+        <article class="mission-card card-purple">
+          <span class="mission-emoji" aria-hidden="true">🎰</span>
+          <h3>Detector de Vacilo</h3>
+          <p>Sorteia um clássico da irresponsabilidade e ensina a consertar. Todo prédio tem pelo menos um.</p>
+          <div class="mission-body">
+            <div class="slot-display" id="slot-display">Puxe a alavanca 👇</div>
+            <p class="slot-fix" id="slot-fix"></p>
+            <button type="button" class="btn btn-ink" id="slot-btn">🎰 Sortear vacilo</button>
+          </div>
+        </article>
+
+        <!-- mecânica 9: modo fumaça -->
+        <article class="mission-card card-blue">
+          <span class="mission-emoji" aria-hidden="true">🌫️</span>
+          <h3>Modo Fumaça</h3>
+          <p>A sala vai encher de fumaça (de mentira). Sobreviva 15 segundos na zona respirável — embaixo, onde o ar mora.</p>
+          <div class="mission-body">
+            <p class="scenario">Regra de ouro: fumaça sobe, você desce. Mantenha o cursor na faixa de ar limpo.</p>
+            <button type="button" class="btn btn-ink" id="smoke-start">🌫️ Encher a sala</button>
+          </div>
+        </article>
+
+        <!-- mecânica 10: caça aos perigos -->
+        <article class="mission-card card-yellow">
+          <span class="mission-emoji" aria-hidden="true">🔎</span>
+          <h3>Caça aos Perigos</h3>
+          <p>Uma sala aparentemente inocente. Cinco vacilos escondidos. Ache todos antes que virem manchete.</p>
+          <div class="mission-body">
+            <span class="streak-pill">achados: <span id="hunt-count">0</span>/5</span>
+            <div class="hunt-grid" id="hunt-grid"></div>
+            <p class="feedback" id="hunt-feedback"></p>
+          </div>
+        </article>
+
+        <!-- mecânica 11: ordem na fuga -->
+        <article class="mission-card card-white">
+          <span class="mission-emoji" aria-hidden="true">🕺</span>
+          <h3>Ordem na Fuga</h3>
+          <p>Todo mundo conhece os passos. Quase ninguém sabe a ORDEM. Clique na sequência certa.</p>
+          <div class="mission-body">
+            <div class="evac-list" id="evac-list"></div>
+            <p class="feedback" id="evac-feedback"></p>
+            <button type="button" class="btn-ghost" id="evac-reset">🔀 Embaralhar de novo</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- mecânica 12: diploma -->
+      <div class="cert-banner">
+        <div>
+          <h3 class="display">Diploma de <span class="hl-purple">Brigadista de Sofá</span></h3>
+          <p>Junte conquistas (<span id="cert-progress">0/14</span>) e gere um certificado oficialmente não-oficial. Pendure na copa, de preferência longe do fogão.</p>
+        </div>
+        <form id="cert-form">
+          <input id="cert-name" type="text" maxlength="40" placeholder="Seu nome (ou codinome heroico)" aria-label="Nome para o certificado" />
+          <button class="btn btn-ink" type="submit">📜 Gerar certificado</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <!-- mecânica 13: placar de segurança -->
+        <div class="days-board">
+          <span class="label-pill">🏆 Placar de segurança</span>
+          <div class="days-num display" id="days-num">0</div>
+          <p>dias sem incêndio neste site</p>
+        </div>
+        <h2 class="display">Não entre em <span class="hl-red">pânico</span>*</h2>
+        <p class="footer-note">*a não ser em treino. Aí pode fingir bem feito, que o Chefe Hidrante gosta de realismo.</p>
+        <p class="footer-legal">
+          BRIGADA™ é um assistente informativo e não substitui treinamento oficial de brigada.
+          Em emergência real, ligue <a href="tel:193">193</a> (Corpo de Bombeiros).<br />
+          Feito com 🧯, dicas de verdade e um humor questionável. Digite <strong>193</strong> em qualquer lugar da página. Confia.
+        </p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- mecânica 3: quiz (dialog nativo) -->
+  <dialog id="quiz-dialog" aria-label="Quiz do Brigadista">
+    <div class="quiz-head">
+      <h3>🎓 Quiz do Brigadista</h3>
+      <button type="button" class="dialog-close" data-close aria-label="Fechar">✕</button>
+    </div>
+    <div class="quiz-body" id="quiz-body"></div>
+  </dialog>
+
+  <!-- mecânica 5: simulado de evacuação -->
+  <dialog id="panic-dialog" class="panic-overlay" aria-label="Simulado de evacuação">
+    <div class="panic-inner">
+      <h2 class="display">🚨 Você apertou.</h2>
+      <p>Claro que apertou. Aproveita: isto virou um SIMULADO DE EVACUAÇÃO.</p>
+      <ol class="panic-steps">
+        <li>Mantenha a calma — pânico é péssimo conselheiro.</li>
+        <li>Acione o alarme e avise quem estiver perto.</li>
+        <li>Largue tudo. Sim, até o notebook. Ele não sente sua falta.</li>
+        <li>Siga a rota de fuga. Fumaça? Vá agachado — o ar limpo mora embaixo.</li>
+        <li>Elevador NUNCA. Escada SEMPRE.</li>
+        <li>Ponto de encontro e fique lá. Voltar pra buscar casaco não é heroísmo.</li>
+      </ol>
+      <div class="panic-actions">
+        <button type="button" class="btn" id="siren-toggle">🔊 Ligar sirene</button>
+        <button type="button" class="btn btn-ink" data-close>Encerrar simulado</button>
+      </div>
+      <p class="panic-note">Emergência de verdade? Ligue <a href="tel:193" style="color:#fff">193</a> agora. Este site pode esperar.</p>
+    </div>
+  </dialog>
+
+  <!-- mecânica 7: galeria de conquistas -->
+  <dialog id="ach-dialog" aria-label="Conquistas">
+    <div class="quiz-head ach-head">
+      <h3>🏅 Conquistas</h3>
+      <button type="button" class="dialog-close" data-close aria-label="Fechar">✕</button>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-progress"><i id="ach-progress-bar"></i></div>
+      <p class="ach-progress" id="ach-progress"></p>
+      <div class="ach-grid" id="ach-grid"></div>
+    </div>
+  </dialog>
+
+  <!-- mecânica 9: overlay de fumaça -->
+  <div id="smoke-overlay" hidden>
+    <div class="smoke-cloud" aria-hidden="true"></div>
+    <div class="smoke-hud">
+      <span>🧎 Fique abaixo da fumaça — <b id="smoke-timer">15</b>s</span>
+      <button type="button" class="btn" id="smoke-quit">Desistir (tossindo)</button>
+    </div>
+  </div>
+
+  <div class="toast-zone" id="toast-zone" aria-live="polite"></div>
 
   <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/site.js') }}"></script>
 </body>
 </html>
