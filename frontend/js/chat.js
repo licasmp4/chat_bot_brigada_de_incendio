@@ -285,7 +285,7 @@ async function sendMessage(text) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         provider: providerSelect.value,
-        messages: history,
+        messages: history.slice(-20), // backend também corta; economiza banda
         api_key: loadKeys()[providerSelect.value],
       }),
     });
@@ -293,7 +293,11 @@ async function sendMessage(text) {
     typingEl.remove();
 
     if (!response.ok || !response.body) {
-      renderMessage("error", "Não foi possível falar com o servidor. Tente novamente.");
+      let msg = "Não foi possível falar com o servidor. Tente novamente.";
+      try {
+        msg = (await response.json()).error || msg;
+      } catch {}
+      renderMessage("error", msg);
       return;
     }
 
@@ -308,6 +312,28 @@ async function sendMessage(text) {
       botText += decoder.decode(value, { stream: true });
       botEl.innerHTML = mdToHtml(botText);
       scrollToBottom();
+    }
+
+    // erro no meio do stream não vira "memória" do bot no histórico
+    const errIdx = botText.indexOf("\n\n[erro]");
+    if (errIdx !== -1) {
+      const clean = botText.slice(0, errIdx).trim();
+      const errText = botText.slice(errIdx).replace(/^\s*\[erro\]\s*/, "");
+      if (clean) {
+        botEl.innerHTML = mdToHtml(clean);
+        history.push({ role: "assistant", content: clean });
+      } else {
+        botEl.remove();
+      }
+      saveHistory(history);
+      renderMessage("error", errText);
+      return;
+    }
+
+    if (!botText.trim()) {
+      botEl.remove();
+      renderMessage("error", "O Chefe Hidrante ficou sem palavras. Tente de novo.");
+      return;
     }
 
     history.push({ role: "assistant", content: botText });

@@ -226,9 +226,12 @@ document.querySelectorAll("[data-close]").forEach((btn) =>
   btn.addEventListener("click", () => btn.closest("dialog").close())
 );
 
-/* ============ popup de boas-vindas ============ */
+/* ============ popup de boas-vindas (1x por navegador) ============ */
 
-$("#welcome-dialog").showModal();
+const WELCOME_KEY = "brigada-welcome-seen";
+const welcomeDialog = $("#welcome-dialog");
+if (!localStorage.getItem(WELCOME_KEY)) welcomeDialog.showModal();
+welcomeDialog.addEventListener("close", () => localStorage.setItem(WELCOME_KEY, "1"));
 
 /* ============ 3. quiz do brigadista ============ */
 

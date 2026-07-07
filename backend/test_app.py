@@ -65,6 +65,55 @@ def test_chat_rejects_invalid_role():
     assert resp.status_code == 400
 
 
+def test_chat_rejects_non_string_content():
+    client = app.test_client()
+    resp = client.post(
+        "/chat",
+        json={"provider": "groq", "messages": [{"role": "user", "content": 42}]},
+    )
+    assert resp.status_code == 400
+
+
+def test_chat_trims_history_and_starts_with_user():
+    client = app.test_client()
+    # 30 mensagens: o corte das últimas 20 começa em "assistant", que deve cair
+    msgs = [
+        {"role": "assistant" if i % 2 == 0 else "user", "content": f"m{i}"}
+        for i in range(29)
+    ]
+    msgs.append({"role": "user", "content": "x" * 5000})
+    captured = {}
+
+    def fake_stream(provider_id, messages, api_key=None):
+        captured["messages"] = messages
+        yield "ok"
+
+    with patch("app.get_api_key", return_value="fake"), \
+         patch("app.stream_reply", fake_stream):
+        resp = client.post("/chat", json={"provider": "groq", "messages": msgs})
+        resp.get_data()
+
+    sent = captured["messages"]
+    assert len(sent) == 19          # 20 do corte - 1 assistant descartado do topo
+    assert sent[0] == {"role": "user", "content": "m11"}
+    assert len(sent[-1]["content"]) == 4000
+
+
+def test_chat_rate_limit():
+    from app import RATE_LIMIT, _hits
+
+    client = app.test_client()
+    _hits.clear()
+    kw = {"environ_base": {"REMOTE_ADDR": "10.9.9.9"}}
+    body = {"provider": "nope", "messages": []}
+    for _ in range(RATE_LIMIT):
+        assert client.post("/chat", json=body, **kw).status_code == 400
+    resp = client.post("/chat", json=body, **kw)
+    assert resp.status_code == 429
+    assert "Calma" in resp.get_data(as_text=True)
+    _hits.clear()
+
+
 if __name__ == "__main__":
     test_index_serves_html()
     test_chat_rejects_invalid_provider()
@@ -72,4 +121,7 @@ if __name__ == "__main__":
     test_chat_streams_provider_output()
     test_chat_handles_missing_api_key()
     test_chat_rejects_invalid_role()
+    test_chat_rejects_non_string_content()
+    test_chat_trims_history_and_starts_with_user()
+    test_chat_rate_limit()
     print("OK - app.py valid")

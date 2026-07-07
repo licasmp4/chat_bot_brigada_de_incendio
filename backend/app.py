@@ -1,4 +1,7 @@
 import os
+import time
+from collections import defaultdict, deque
+from threading import Lock
 
 from dotenv import load_dotenv
 
@@ -16,6 +19,37 @@ app = Flask(
     template_folder="../frontend",
 )
 
+# limites do /chat — protegem a chave do .env de abuso e o bolso de conversa infinita
+RATE_LIMIT = 15      # requisições por janela, por IP
+RATE_WINDOW = 60     # segundos
+MAX_MESSAGES = 20    # só as últimas N mensagens vão pra IA
+MAX_CHARS = 4000     # por mensagem
+
+# ponytail: contador em memória, por worker; flask-limiter + redis se escalar
+_hits = defaultdict(deque)
+_hits_lock = Lock()
+
+
+def _client_ip():
+    # atrás de proxy (Render/Railway), o IP real vem no X-Forwarded-For
+    forwarded = request.headers.get("X-Forwarded-For", "")
+    return forwarded.split(",")[0].strip() or request.remote_addr or "?"
+
+
+def _rate_limited(ip):
+    now = time.monotonic()
+    with _hits_lock:
+        hits = _hits[ip]
+        while hits and now - hits[0] > RATE_WINDOW:
+            hits.popleft()
+        if len(hits) >= RATE_LIMIT:
+            return True
+        hits.append(now)
+        if len(_hits) > 10_000:
+            for key in [k for k, q in _hits.items() if not q]:
+                del _hits[key]
+        return False
+
 
 @app.route("/")
 def index():
@@ -28,6 +62,12 @@ def index():
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    if _rate_limited(_client_ip()):
+        return jsonify({
+            "error": "Calma, brigadista! Muitas perguntas de uma vez — "
+                     "o Chefe Hidrante pediu um minutinho pra recarregar o extintor."
+        }), 429
+
     data = request.get_json(force=True, silent=True) or {}
     provider_id = data.get("provider")
     messages = data.get("messages")
@@ -36,8 +76,24 @@ def chat():
         return jsonify({"error": "provider inválido"}), 400
     if not isinstance(messages, list) or not messages:
         return jsonify({"error": "messages inválido"}), 400
-    if any(m.get("role") not in ("user", "assistant") for m in messages):
-        return jsonify({"error": "role de mensagem inválida"}), 400
+    if any(
+        not isinstance(m, dict)
+        or m.get("role") not in ("user", "assistant")
+        or not isinstance(m.get("content"), str)
+        or not m["content"].strip()
+        for m in messages
+    ):
+        return jsonify({"error": "mensagem inválida"}), 400
+
+    # só as últimas mensagens, cortadas, e começando em "user" (exigência da API)
+    messages = [
+        {"role": m["role"], "content": m["content"][:MAX_CHARS]}
+        for m in messages[-MAX_MESSAGES:]
+    ]
+    while messages and messages[0]["role"] != "user":
+        messages.pop(0)
+    if not messages:
+        return jsonify({"error": "messages inválido"}), 400
 
     # chave do navegador (botão 🔑) tem prioridade sobre o .env
     user_key = (data.get("api_key") or "").strip()[:256] or None

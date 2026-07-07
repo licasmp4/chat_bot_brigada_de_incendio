@@ -9,7 +9,7 @@
 ![Flask](https://img.shields.io/badge/Flask-backend-00b2ff?logo=flask&logoColor=212529&labelColor=f4e9e1)
 ![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-zero_deps_no_front-1be349?logo=javascript&logoColor=212529&labelColor=f4e9e1)
 ![IAs](https://img.shields.io/badge/6_provedores-de_IA-ab54f7?labelColor=f4e9e1)
-![Conquistas](https://img.shields.io/badge/15-conquistas-ff5c38?labelColor=f4e9e1)
+![Conquistas](https://img.shields.io/badge/16-conquistas-ff5c38?labelColor=f4e9e1)
 ![Autor](https://img.shields.io/badge/feito_por-Lucas_Gonzaga-ea3737?labelColor=f4e9e1)
 
 <img src="docs/img/hero.png" alt="Hero do site: SEU BOMBEIRO DE BOLSO, com chamas clicáveis e stickers" width="820" />
@@ -35,10 +35,13 @@ Design inspirado no [units.gr](https://units.gr/en/homepage/): **soft neubrutali
 <img src="docs/img/chat.png" alt="Chat com o Chefe Hidrante" width="720" />
 </div>
 
+- **Personagem de verdade** — o Chefe fala sempre na terceira pessoa, solta meme com moderação ("deixar panela sozinha no fogo é -1000 de aura") e corta TODO o humor se detectar emergência real.
 - **6 provedores de IA** à escolha: Groq, Grok, Gemini, ChatGPT, DeepSeek e Claude — troca no seletor, sem recarregar.
+- **Traga sua chave (BYOK)** — botão 🔑 no chat: cole sua chave de API direto no navegador, sem mexer em `.env`. Fica no `localStorage` e tem prioridade sobre a chave do servidor.
 - **Streaming** — a resposta aparece enquanto o modelo digita.
 - **Detecção de emergência** — mensagens tipo "tá pegando fogo AGORA" disparam banner mandando ligar **193** antes de qualquer papo.
 - **Markdown seguro** — renderizador próprio, com HTML escapado (e teste automatizado).
+- **Protegido contra abuso** — rate limit por IP (15 req/min) e histórico cortado nas últimas 20 mensagens antes de ir pra IA.
 - Histórico só no navegador (`localStorage`). Nada vai pro servidor.
 - Status de digitação cômico: *"consultando a NBR 14276..."*, *"procurando o pino do extintor..."*
 
@@ -60,7 +63,7 @@ Design inspirado no [units.gr](https://units.gr/en/homepage/): **soft neubrutali
 | 🔎 | **Caça aos Perigos** — 5 vacilos escondidos numa sala de 24 itens | Olhar de inspetor |
 | 🕺 | **Ordem na Fuga** — os passos da evacuação embaralhados; clique na sequência certa | A *ordem* importa |
 | 📜 | **Diploma de Brigadista de Sofá** — certificado PNG gerado no canvas, com seu nome e patente | Recompensa (questionável) |
-| 🏅 | **15 conquistas** — toasts + galeria, salvas no navegador | Progresso e rejogabilidade |
+| 🏅 | **16 conquistas** — toasts + galeria, salvas no navegador | Progresso e rejogabilidade |
 | 🏆 | **Placar "dias sem incêndio"** — zera quando você erra o extintor | Vergonha pedagógica |
 | 🔊 | **Sons em WebAudio** — sirene, acertos, erros, fanfarra (sem nenhum asset de áudio; tem botão de mudo) | Feedback |
 | 📟 | **Easter egg** — digite `193` em qualquer lugar da página | O número que importa |
@@ -89,7 +92,7 @@ python3 app.py
 
 ## 🔑 Provedores de IA
 
-Providers sem chave no `.env` aparecem desabilitados no seletor.
+Providers sem chave aparecem desabilitados no seletor. Dá pra configurar de dois jeitos: no `.env` do servidor, ou colando a própria chave no botão **🔑 Chaves** do chat (fica só no navegador).
 
 | Provedor | Variável no `.env` | Modelo padrão |
 |----------|--------------------|---------------|
