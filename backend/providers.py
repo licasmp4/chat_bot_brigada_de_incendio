@@ -8,13 +8,14 @@ class MissingAPIKeyError(Exception):
     pass
 
 
-def stream_reply(provider_id, messages):
+def stream_reply(provider_id, messages, api_key=None):
     cfg = PROVIDERS[provider_id]
-    api_key = get_api_key(provider_id)
+    # chave enviada pelo navegador tem prioridade sobre o .env
+    api_key = api_key or get_api_key(provider_id)
     if not api_key:
         raise MissingAPIKeyError(
             f"Chave da API do {cfg['label']} não configurada. "
-            f"Defina {cfg['env']} no arquivo .env."
+            f"Cole a sua no botão 🔑 Chaves, ou defina {cfg['env']} no .env."
         )
 
     if cfg["sdk"] == "openai":

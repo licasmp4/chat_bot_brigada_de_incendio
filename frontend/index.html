@@ -26,7 +26,7 @@
       <a href="#" id="nav-quiz">Quiz</a>
     </nav>
     <div class="nav-cta">
-      <button type="button" class="btn-ghost" id="ach-btn" aria-label="Ver conquistas">🏅 <span id="ach-count">0/15</span></button>
+      <button type="button" class="btn-ghost" id="ach-btn" aria-label="Ver conquistas">🏅 <span id="ach-count">0/16</span></button>
       <button type="button" class="btn-ghost" id="sound-btn" aria-label="Ligar ou desligar sons">🔊</button>
       <a class="badge-193" href="tel:193">
         <span class="pulse-dot" aria-hidden="true"></span> 193
@@ -90,11 +90,12 @@
           <div class="chat-controls">
             <select id="provider-select" aria-label="Escolher provedor de IA">
               {% for id, cfg in providers.items() %}
-              <option value="{{ id }}" {% if not cfg.configured %}disabled{% endif %}>
+              <option value="{{ id }}" data-label="{{ cfg.label }}" data-configured="{{ 1 if cfg.configured else 0 }}" {% if not cfg.configured %}disabled{% endif %}>
                 {{ cfg.label }}{% if not cfg.configured %} — sem chave{% endif %}
               </option>
               {% endfor %}
             </select>
+            <button id="keys-btn" type="button" class="btn-ghost">🔑 Chaves</button>
             <button id="new-chat-btn" type="button" class="btn-ghost">Nova conversa</button>
           </div>
         </div>
@@ -209,7 +210,7 @@
       <div class="cert-banner">
         <div>
           <h3 class="display">Diploma de <span class="hl-purple">Brigadista de Sofá</span></h3>
-          <p>Junte conquistas (<span id="cert-progress">0/15</span>) e gere um certificado oficialmente não-oficial. Pendure na copa, de preferência longe do fogão.</p>
+          <p>Junte conquistas (<span id="cert-progress">0/16</span>) e gere um certificado oficialmente não-oficial. Pendure na copa, de preferência longe do fogão.</p>
         </div>
         <form id="cert-form">
           <input id="cert-name" type="text" maxlength="40" placeholder="Seu nome (ou codinome heroico)" aria-label="Nome para o certificado" />
@@ -234,7 +235,7 @@
           <p>único número de telefone que importa</p>
         </div>
         <div class="stat-card stat-green">
-          <span class="stat-num display">15</span>
+          <span class="stat-num display">16</span>
           <p>jeitos de virar Lorde do Hidrante</p>
         </div>
         <div class="stat-card stat-orange">
@@ -337,6 +338,31 @@
     </footer>
   </main>
 
+  <!-- popup de boas-vindas: pra que serve isso tudo -->
+  <dialog id="welcome-dialog" aria-label="Sobre o projeto">
+    <div class="quiz-head welcome-head">
+      <h3>👋 Psiu! Antes de tudo...</h3>
+      <button type="button" class="dialog-close" data-close aria-label="Fechar">✕</button>
+    </div>
+    <div class="quiz-body welcome-body">
+      <span class="welcome-emoji" aria-hidden="true">🧯</span>
+      <p>
+        <strong>BRIGADA™</strong> é um projeto educativo que ensina
+        <strong>prevenção de incêndio</strong> — feito especialmente para
+        <strong>crianças</strong> (e para adultos que apertam botão escrito "NÃO APERTE").
+      </p>
+      <p>
+        Aqui você conversa com o <strong>Chefe Hidrante</strong>, cumpre missões,
+        ganha conquistas e aprende a não virar manchete. As piadas são de mentira —
+        <strong>as dicas valem a vida real</strong>.
+      </p>
+      <p class="welcome-note">
+        🚨 Emergência de verdade? Larga o site e liga <a href="tel:193">193</a>.
+      </p>
+      <button type="button" class="btn btn-ink welcome-go" data-close>Bora aprender! 🔥</button>
+    </div>
+  </dialog>
+
   <!-- mecânica 3: quiz (dialog nativo) -->
   <dialog id="quiz-dialog" aria-label="Quiz do Brigadista">
     <div class="quiz-head">
@@ -365,6 +391,31 @@
       </div>
       <p class="panic-note">Emergência de verdade? Ligue <a href="tel:193" style="color:#fff">193</a> agora. Este site pode esperar.</p>
     </div>
+  </dialog>
+
+  <!-- chaves de API do usuário (BYOK) -->
+  <dialog id="keys-dialog" aria-label="Suas chaves de API">
+    <div class="quiz-head keys-head">
+      <h3>🔑 Suas chaves de API</h3>
+      <button type="button" class="dialog-close" data-close aria-label="Fechar">✕</button>
+    </div>
+    <form class="quiz-body keys-body" id="keys-form">
+      <p class="keys-note">
+        Cole a chave dos provedores que você quiser usar. Ela fica salva
+        <strong>só neste navegador</strong> e é usada direto nas suas conversas —
+        nada de mexer em arquivo <code>.env</code>.
+      </p>
+      {% for id, cfg in providers.items() %}
+      <label class="key-row">
+        <span>{{ cfg.label }}{% if cfg.configured %} <small>· servidor já tem chave</small>{% endif %}</span>
+        <input type="password" data-provider="{{ id }}" placeholder="Cole sua chave do {{ cfg.label }}..." autocomplete="off" spellcheck="false" />
+      </label>
+      {% endfor %}
+      <div class="keys-actions">
+        <button type="submit" class="btn btn-ink">💾 Salvar chaves</button>
+        <button type="button" class="btn" id="keys-clear">🧹 Limpar tudo</button>
+      </div>
+    </form>
   </dialog>
 
   <!-- mecânica 7: galeria de conquistas -->

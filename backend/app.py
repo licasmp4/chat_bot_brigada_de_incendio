@@ -39,16 +39,19 @@ def chat():
     if any(m.get("role") not in ("user", "assistant") for m in messages):
         return jsonify({"error": "role de mensagem inválida"}), 400
 
-    api_key = get_api_key(provider_id)
+    # chave do navegador (botão 🔑) tem prioridade sobre o .env
+    user_key = (data.get("api_key") or "").strip()[:256] or None
+    api_key = user_key or get_api_key(provider_id)
     if not api_key:
         cfg = PROVIDERS[provider_id]
         return jsonify({
-            "error": f"Chave da API do {cfg['label']} não configurada. Defina {cfg['env']} no arquivo .env."
+            "error": f"Chave da API do {cfg['label']} não configurada. "
+                     f"Cole a sua no botão 🔑 Chaves, ou defina {cfg['env']} no .env."
         }), 400
 
     def generate():
         try:
-            for chunk in stream_reply(provider_id, messages):
+            for chunk in stream_reply(provider_id, messages, api_key):
                 yield chunk
         except MissingAPIKeyError as exc:
             yield f"\n\n[erro] {exc}"

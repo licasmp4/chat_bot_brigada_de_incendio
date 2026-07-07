@@ -24,6 +24,7 @@ const ACHIEVEMENTS = {
   "certificado": ["🖼️", "Emoldurou", "Gerou o Diploma de Brigadista de Sofá"],
   "dias-zero": ["📉", "Recorde Negativo", "Zerou o placar de dias sem incêndio"],
   "rebelde": ["😈", "Problema com Autoridade", "Apertou o NÃO APERTE 3 vezes. O botão desistiu."],
+  "chaveiro": ["🔑", "Trouxe a Própria Chave", "Colou a própria chave de API. Independência total."],
 };
 
 function loadAch() {
@@ -224,6 +225,10 @@ panicDialog.addEventListener("close", () => {
 document.querySelectorAll("[data-close]").forEach((btn) =>
   btn.addEventListener("click", () => btn.closest("dialog").close())
 );
+
+/* ============ popup de boas-vindas ============ */
+
+$("#welcome-dialog").showModal();
 
 /* ============ 3. quiz do brigadista ============ */
 

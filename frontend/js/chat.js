@@ -183,6 +183,63 @@ function setBusy(busy) {
 let history = loadHistory();
 renderHistory(history);
 
+/* chaves de API do usuário (BYOK) — ficam só no navegador */
+const KEYS_KEY = "brigada-api-keys";
+
+function loadKeys() {
+  try {
+    return JSON.parse(localStorage.getItem(KEYS_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function refreshProviderOptions() {
+  const keys = loadKeys();
+  for (const opt of providerSelect.options) {
+    const hasLocal = !!keys[opt.value];
+    const hasServer = opt.dataset.configured === "1";
+    opt.disabled = !hasLocal && !hasServer;
+    opt.textContent =
+      opt.dataset.label +
+      (hasLocal ? " — 🔑 sua chave" : hasServer ? "" : " — sem chave");
+  }
+}
+refreshProviderOptions();
+
+const keysDialog = document.getElementById("keys-dialog");
+const keysForm = document.getElementById("keys-form");
+
+document.getElementById("keys-btn").addEventListener("click", () => {
+  const keys = loadKeys();
+  keysForm.querySelectorAll("input[data-provider]").forEach((inp) => {
+    inp.value = keys[inp.dataset.provider] || "";
+  });
+  keysDialog.showModal();
+});
+
+keysForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const keys = {};
+  keysForm.querySelectorAll("input[data-provider]").forEach((inp) => {
+    const v = inp.value.trim();
+    if (v) keys[inp.dataset.provider] = v;
+  });
+  localStorage.setItem(KEYS_KEY, JSON.stringify(keys));
+  refreshProviderOptions();
+  keysDialog.close();
+  if (Object.keys(keys).length) {
+    if (typeof toast === "function") toast("🔑", "Chaves salvas", "Só neste navegador. Prometido.");
+    document.dispatchEvent(new CustomEvent("brigada:achievement", { detail: "chaveiro" }));
+  }
+});
+
+document.getElementById("keys-clear").addEventListener("click", () => {
+  localStorage.removeItem(KEYS_KEY);
+  keysForm.querySelectorAll("input[data-provider]").forEach((inp) => (inp.value = ""));
+  refreshProviderOptions();
+});
+
 // restaura último provider escolhido; senão, primeiro com chave configurada
 const savedProvider = localStorage.getItem(PROVIDER_KEY);
 const savedOption = savedProvider &&
@@ -202,7 +259,7 @@ async function sendMessage(text) {
   if (!selected || selected.disabled) {
     renderMessage(
       "error",
-      "Nenhum provedor de IA configurado. Preencha uma chave de API no arquivo .env e reinicie o servidor."
+      "Nenhum provedor de IA configurado. Cole sua chave no botão 🔑 Chaves ali em cima, ou preencha o arquivo .env."
     );
     return;
   }
@@ -226,7 +283,11 @@ async function sendMessage(text) {
     const response = await fetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ provider: providerSelect.value, messages: history }),
+      body: JSON.stringify({
+        provider: providerSelect.value,
+        messages: history,
+        api_key: loadKeys()[providerSelect.value],
+      }),
     });
 
     typingEl.remove();

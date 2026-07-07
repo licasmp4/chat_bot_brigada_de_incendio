@@ -1239,6 +1239,62 @@ dialog[open] { animation: dialog-in .3s var(--spring); }
 
 .smoke-hud.ouch { animation: shake .4s; }
 
+/* ---------- chaves de API (BYOK) ---------- */
+
+.keys-head { background: var(--purple-soft); }
+
+.keys-body { max-height: 70vh; overflow-y: auto; }
+
+.keys-note {
+  margin: 0;
+  font-size: .9rem;
+  color: var(--ink-soft);
+}
+
+.key-row { display: flex; flex-direction: column; gap: var(--s1); }
+
+.key-row span { font-weight: 700; font-size: .9rem; }
+.key-row small { color: var(--ink-soft); font-weight: 600; }
+
+.key-row input {
+  padding: var(--s2) var(--s4);
+  border: 2px solid var(--ink);
+  border-radius: var(--r-pill);
+  background: var(--cream);
+  font: inherit;
+  font-size: .85rem;
+}
+
+.key-row input:focus {
+  outline: none;
+  background: var(--white);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--purple) 40%, transparent);
+}
+
+.keys-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+
+/* ---------- popup de boas-vindas ---------- */
+
+.welcome-head { background: var(--yellow); }
+
+.welcome-body { text-align: center; }
+
+.welcome-emoji {
+  display: block;
+  font-size: 3.2rem;
+  animation: boing .6s var(--spring);
+}
+
+.welcome-body p { margin: 0; }
+
+.welcome-note {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.welcome-go { align-self: center; }
+
 /* ---------- números que não mentem ---------- */
 
 .stats {
