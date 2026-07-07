@@ -900,7 +900,7 @@ setInterval(() => {
 document.querySelectorAll(".sticker[data-quip]").forEach((s) => {
   s.addEventListener("click", () => {
     beep(700, .07);
-    toast(s.textContent, "Ficha técnica", s.dataset.quip);
+    toast(s.dataset.emoji || s.textContent, "Ficha técnica", s.dataset.quip);
   });
 });
 

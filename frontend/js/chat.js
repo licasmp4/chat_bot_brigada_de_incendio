@@ -8,6 +8,54 @@ const sendBtn = document.getElementById("send-btn");
 const providerSelect = document.getElementById("provider-select");
 const newChatBtn = document.getElementById("new-chat-btn");
 
+/* o Chefe Hidrante em pessoa: SVG inline, olhos que piscam, boca que fala */
+const HYDRANT_SVG = `
+<svg class="hydrant" viewBox="0 0 64 64" aria-hidden="true">
+  <rect x="16" y="55" width="32" height="6" rx="3" fill="var(--ink)"/>
+  <rect x="20" y="20" width="24" height="37" rx="9" fill="var(--red)" stroke="var(--ink)" stroke-width="2.5"/>
+  <path d="M 20 21 a 12 12 0 0 1 24 0 z" fill="var(--red)" stroke="var(--ink)" stroke-width="2.5"/>
+  <circle cx="32" cy="6.5" r="3.5" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>
+  <rect x="16" y="18.5" width="32" height="5" rx="2.5" fill="var(--ink)"/>
+  <circle cx="14.5" cy="36" r="5" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>
+  <circle cx="49.5" cy="36" r="5" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2.5"/>
+  <g class="eyes">
+    <circle cx="27" cy="33" r="4.2" fill="var(--white)" stroke="var(--ink)" stroke-width="2"/>
+    <circle cx="37" cy="33" r="4.2" fill="var(--white)" stroke="var(--ink)" stroke-width="2"/>
+    <g class="pupils">
+      <circle cx="27.8" cy="33.5" r="1.7" fill="var(--ink)"/>
+      <circle cx="37.8" cy="33.5" r="1.7" fill="var(--ink)"/>
+    </g>
+  </g>
+  <circle cx="23.5" cy="40" r="1.8" fill="#ff9d87"/>
+  <circle cx="40.5" cy="40" r="1.8" fill="#ff9d87"/>
+  <path class="mouth" d="M 28 42.5 q 4 3.5 8 0" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>`;
+
+function botRow() {
+  const row = document.createElement("div");
+  row.className = "bot-row";
+  const avatar = document.createElement("span");
+  avatar.className = "bot-avatar";
+  avatar.setAttribute("aria-hidden", "true");
+  avatar.innerHTML = HYDRANT_SVG;
+  row.appendChild(avatar);
+  return row;
+}
+
+// o avatar do cabeçalho também vira o boneco — e os olhos seguem o cursor
+document.querySelector(".chat-avatar").innerHTML = HYDRANT_SVG;
+
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches && matchMedia("(pointer: fine)").matches) {
+  const pupils = document.querySelector(".chat-avatar .pupils");
+  document.addEventListener("mousemove", (e) => {
+    const box = pupils.closest("svg").getBoundingClientRect();
+    const dx = e.clientX - (box.left + box.width / 2);
+    const dy = e.clientY - (box.top + box.height / 2);
+    const dist = Math.hypot(dx, dy) || 1;
+    pupils.style.transform = `translate(${(dx / dist) * 1.6}px, ${(dy / dist) * 1.4}px)`;
+  });
+}
+
 const SUGGESTIONS = [
   "Quais os tipos de extintores e quando usar cada um?",
   "O que fazer ao ouvir o alarme de incêndio?",
@@ -99,10 +147,13 @@ function renderMessage(role, text) {
   el.className = `message ${role}`;
   if (role === "bot") {
     el.innerHTML = mdToHtml(text);
+    const row = botRow();
+    row.appendChild(el);
+    chatWindow.appendChild(row);
   } else {
     el.textContent = text;
+    chatWindow.appendChild(el);
   }
-  chatWindow.appendChild(el);
   scrollToBottom();
   return el;
 }
@@ -158,6 +209,8 @@ const TYPING_LINES = [
 ];
 
 function showTypingIndicator() {
+  const row = botRow();
+  row.classList.add("talking");
   const el = document.createElement("div");
   el.className = "message bot";
   el.innerHTML =
@@ -169,9 +222,10 @@ function showTypingIndicator() {
     if (!el.isConnected) return clearInterval(timer);
     status.textContent = TYPING_LINES[++i % TYPING_LINES.length];
   }, 1600);
-  chatWindow.appendChild(el);
+  row.appendChild(el);
+  chatWindow.appendChild(row);
   scrollToBottom();
-  return el;
+  return row;
 }
 
 function setBusy(busy) {
@@ -302,6 +356,7 @@ async function sendMessage(text) {
     }
 
     const botEl = renderMessage("bot", "");
+    botEl.closest(".bot-row").classList.add("talking");
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let botText = "";
@@ -323,7 +378,7 @@ async function sendMessage(text) {
         botEl.innerHTML = mdToHtml(clean);
         history.push({ role: "assistant", content: clean });
       } else {
-        botEl.remove();
+        botEl.closest(".bot-row").remove();
       }
       saveHistory(history);
       renderMessage("error", errText);
@@ -331,7 +386,7 @@ async function sendMessage(text) {
     }
 
     if (!botText.trim()) {
-      botEl.remove();
+      botEl.closest(".bot-row").remove();
       renderMessage("error", "O Chefe Hidrante ficou sem palavras. Tente de novo.");
       return;
     }
@@ -348,6 +403,8 @@ async function sendMessage(text) {
     if (typingEl) typingEl.remove();
     renderMessage("error", "Erro de conexão. Verifique sua internet e tente novamente.");
   } finally {
+    // boca fecha aconteça o que acontecer
+    document.querySelectorAll(".bot-row.talking").forEach((r) => r.classList.remove("talking"));
     setBusy(false);
   }
 }

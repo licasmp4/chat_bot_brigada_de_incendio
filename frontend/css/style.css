@@ -376,6 +376,48 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .sticker._2 { top: 55%; left: 12%; rotate: 6deg; background: var(--blue); animation-delay: -1.4s; }
 .sticker._3 { top: 24%; right: 8%; rotate: 10deg; background: var(--yellow); animation-delay: -2.6s; }
 .sticker._4 { top: 62%; right: 13%; rotate: -5deg; background: var(--green); animation-delay: -3.5s; }
+.sticker._5 { top: 78%; left: 7%; rotate: 8deg; background: var(--cream); animation-delay: -4.2s; }
+
+/* a turma: personagens SVG com carinha */
+.sticker .char { width: 46px; height: 46px; display: block; }
+
+.char .eyes { animation: hydrant-blink 5s infinite; }
+.char-ext .eyes { transform-origin: 32px 34px; }
+.char-siren .eyes { transform-origin: 32px 39px; animation-delay: -1.7s; }
+.char-flame .eyes { transform-origin: 32px 37px; animation-delay: -3.1s; }
+
+.char-flame {
+  transform-origin: 32px 55px;
+  animation: flame-flicker .9s ease-in-out infinite alternate;
+}
+
+@keyframes flame-flicker {
+  from { transform: scaleY(1) rotate(-2deg); }
+  to { transform: scaleY(1.07) rotate(2.5deg); }
+}
+
+.char-siren .rays { animation: rays-blink 1.1s steps(1) infinite; }
+
+@keyframes rays-blink { 50% { opacity: 0; } }
+
+.char-ext {
+  transform-origin: 32px 57px;
+  animation: ext-jump 2.6s var(--spring) infinite;
+}
+
+@keyframes ext-jump {
+  0%, 78%, 100% { transform: translateY(0) scaleY(1); }
+  84% { transform: translateY(1px) scaleY(.94); }
+  92% { transform: translateY(-3px) scaleY(1.03); }
+}
+
+/* emojis das missões acordam no hover */
+.mission-card:hover .mission-emoji { display: inline-block; animation: wiggle .5s var(--spring); }
+
+@keyframes wiggle {
+  25% { rotate: -10deg; scale: 1.15; }
+  65% { rotate: 8deg; }
+}
 
 @keyframes floaty {
   50% { translate: 0 -14px; }
@@ -506,24 +548,62 @@ select {
 .message.bot {
   align-self: flex-start;
   position: relative;
-  margin-left: var(--s6);
   background: var(--cream);
   border-bottom-left-radius: var(--r-sm);
 }
 
-.message.bot::before {
-  content: "🧯";
-  position: absolute;
-  left: -38px;
-  bottom: -2px;
-  display: grid;
-  place-items: center;
-  width: 30px; height: 30px;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: var(--white);
-  font-size: .95rem;
+/* linha do bot: boneco hidrante + balão */
+.bot-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s2);
+  width: 100%;
 }
+
+.bot-avatar { flex: 0 0 36px; width: 36px; }
+.bot-avatar svg { display: block; width: 100%; height: auto; }
+
+.chat-avatar svg { display: block; width: 38px; height: 38px; }
+
+/* vida no boneco: pisca, olha pros lados, balança e fala */
+.hydrant .eyes {
+  transform-origin: 32px 33px;
+  animation: hydrant-blink 4.4s infinite;
+}
+
+@keyframes hydrant-blink {
+  0%, 90%, 94%, 100% { transform: scaleY(1); }
+  92% { transform: scaleY(.08); }
+}
+
+.hydrant .pupils { animation: hydrant-look 7s infinite; }
+
+@keyframes hydrant-look {
+  0%, 50%, 100% { transform: translateX(0); }
+  58%, 74% { transform: translateX(-1.6px); }
+  82%, 92% { transform: translateX(1.2px); }
+}
+
+/* no cabeçalho os olhos seguem o cursor (JS), então a animação sai da frente */
+.chat-avatar .pupils { animation: none; }
+
+.bot-avatar .hydrant { animation: hydrant-bob 3.2s ease-in-out infinite; }
+
+@keyframes hydrant-bob { 50% { translate: 0 -2px; } }
+
+.bot-row.talking .hydrant {
+  transform-origin: 32px 57px;
+  animation: hydrant-talk .45s ease-in-out infinite;
+}
+
+@keyframes hydrant-talk { 50% { transform: scaleY(.94); } }
+
+.bot-row.talking .mouth {
+  transform-origin: 32px 43px;
+  animation: hydrant-mouth .3s ease-in-out infinite alternate;
+}
+
+@keyframes hydrant-mouth { to { transform: scaleY(1.9) translateY(-1px); } }
 
 .message.error {
   align-self: flex-start;
@@ -1477,7 +1557,9 @@ dialog[open] { animation: dialog-in .3s var(--spring); }
   .cert-banner { padding: var(--s5); }
   #cert-form input { min-width: 100%; }
   .sticker { width: 56px; height: 56px; font-size: 1.5rem; }
+  .sticker .char { width: 36px; height: 36px; }
   .sticker._2, .sticker._4 { display: none; }
+  .sticker._5 { top: 72%; }
   .hero-score { position: static; display: inline-block; rotate: 0deg; margin-bottom: var(--s3); }
   .message { max-width: 90%; }
   .message.bot { margin-left: var(--s5); }
