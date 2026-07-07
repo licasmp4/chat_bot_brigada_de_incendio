@@ -14,6 +14,8 @@
 
 <img src="docs/img/hero.png" alt="Hero do site: SEU BOMBEIRO DE BOLSO, com chamas clicáveis e stickers" width="820" />
 
+### 🔴 [Testar ao vivo](https://chat-bot-brigada-de-incendio.onrender.com)
+
 *"USE AS ESCADAS — O ELEVADOR NÃO É SEU AMIGO NO INCÊNDIO"* — o marquee da página, filosofando
 
 </div>
