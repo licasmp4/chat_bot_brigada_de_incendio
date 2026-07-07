@@ -904,6 +904,12 @@ document.querySelectorAll(".sticker[data-quip]").forEach((s) => {
   });
 });
 
+const renanStamp = $(".stamp-renan");
+renanStamp.addEventListener("click", () => {
+  beep(700, .07);
+  toast("👌", "Selo SUPIMPEX", renanStamp.dataset.quip);
+});
+
 /* ============ aba chorona ============ */
 
 const realTitle = document.title;

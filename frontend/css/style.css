@@ -1425,11 +1425,29 @@ dialog[open] { animation: dialog-in .3s var(--spring); }
 
 .footer { margin-top: 0; }
 
+.stamps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--s6);
+  flex-wrap: wrap;
+}
+
 .stamp {
   display: inline-block;
   margin: var(--s5) 0 0;
   color: var(--yellow);
   animation: stamp-spin 22s linear infinite;
+}
+
+/* selo de qualidade do Renan: gira ao contrário, porque o Renan é do contra */
+.stamp-renan {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--purple-soft);
+  cursor: pointer;
+  animation-direction: reverse;
 }
 
 @keyframes stamp-spin { to { rotate: 360deg; } }
